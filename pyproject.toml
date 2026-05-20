@@ -1,0 +1,9 @@
+[project]
+name = "computer-network-messenger"
+version = "0.1.0"
+description = "P2P messenger project for a computer network design assignment"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
