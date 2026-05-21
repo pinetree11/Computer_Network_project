@@ -66,12 +66,23 @@ def send_to_peer(peer: Peer, sender: str, body: str) -> None:
         conn.sendall(encode_message("MESSAGE", {"From": sender}, body))
 
 
-def command_loop(user_id: str, peers: dict[str, Peer]) -> None:
+def command_loop(
+    user_id: str,
+    peers: dict[str, Peer],
+    server_host: str,
+    server_port: int,
+    listen_host: str,
+    listen_port: int,
+) -> None:
     session: dict[str, Peer] = {}
     print_users(peers)
     while True:
         command = input("> ").strip()
         if command == "/users":
+            print_users(peers)
+        elif command == "/refresh":
+            peers = request_users(server_host, server_port, user_id, listen_host, listen_port)
+            session = {peer_id: peer for peer_id, peer in session.items() if peer_id in peers}
             print_users(peers)
         elif command.startswith("/invite "):
             target = command.split(maxsplit=1)[1]
@@ -91,7 +102,7 @@ def command_loop(user_id: str, peers: dict[str, Peer]) -> None:
         elif command == "/quit":
             break
         else:
-            print("commands: /users, /invite <id>, /send <message>, /end, /quit")
+            print("commands: /users, /refresh, /invite <id>, /send <message>, /end, /quit")
 
 
 def print_users(peers: dict[str, Peer]) -> None:
@@ -122,6 +133,13 @@ if __name__ == "__main__":
     ).start()
     peers = request_users(args.server_host, args.server_port, args.id, args.listen_host, args.listen_port)
     try:
-        command_loop(args.id, peers)
+        command_loop(
+            args.id,
+            peers,
+            args.server_host,
+            args.server_port,
+            args.listen_host,
+            args.listen_port,
+        )
     finally:
         logout(args.server_host, args.server_port, args.id)

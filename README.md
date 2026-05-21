@@ -47,6 +47,7 @@ PYTHONPATH=src python3 -m messenger.client --id bob --server-host 127.0.0.1 --se
 클라이언트 실행 후 사용할 수 있는 명령:
 
 - `/users`: 온라인 사용자 목록 보기
+- `/refresh`: 로그인 서버에서 온라인 사용자 목록 새로 받기
 - `/invite <id>`: 메신저 세션에 사용자 초청
 - `/send <message>`: 세션에 있는 모든 사용자에게 메시지 전송
 - `/end`: 현재 메신저 세션 종료
