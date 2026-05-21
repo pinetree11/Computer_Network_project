@@ -12,15 +12,6 @@ const quitButtonEl = document.querySelector("#quitButton");
 
 let lastMessageCount = 0;
 
-const bubblePalettes = [
-  { bg: "#B9F26D", border: "#74C947", name: "#245734", text: "#245734" },
-  { bg: "#BFFFEA", border: "#58D8A6", name: "#245734", text: "#245734" },
-  { bg: "#FFE16A", border: "#E8B944", name: "#5F4A12", text: "#5F4A12" },
-  { bg: "#FFFFFF", border: "#A8E36D", name: "#357A37", text: "#245734" },
-  { bg: "#7FDB71", border: "#45AC4C", name: "#FFFFFF", text: "#FFFFFF" },
-  { bg: "#DDF9B8", border: "#A8E36D", name: "#245734", text: "#245734" },
-];
-
 async function api(path, options = {}) {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json" },
@@ -34,7 +25,6 @@ async function api(path, options = {}) {
 }
 
 function render(state) {
-  const senderPalettes = assignSenderPalettes(state);
   userTitleEl.textContent = state.user.user_id;
   endpointEl.textContent = `${state.user.ip}:${state.user.port}`;
   setControlsEnabled(state.active !== false);
@@ -75,15 +65,10 @@ function render(state) {
       const sender = document.createElement("strong");
       const meta = document.createElement("span");
       const body = document.createElement("p");
-      const palette = senderPalettes.get(message.sender) || bubblePalettes[0];
       sender.textContent = message.sender;
       meta.textContent = formatTime(message.received_at);
       body.textContent = message.body;
       item.className = message.sender === state.user.user_id ? "message mine" : "message";
-      item.style.setProperty("--bubble-bg", palette.bg);
-      item.style.setProperty("--bubble-border", palette.border);
-      item.style.setProperty("--sender-color", palette.name);
-      item.style.setProperty("--bubble-text", palette.text);
       item.append(sender, meta, body);
       return item;
     })
@@ -151,17 +136,6 @@ function formatTime(seconds) {
     hour: "2-digit",
     minute: "2-digit",
   });
-}
-
-function assignSenderPalettes(state) {
-  const senders = [
-    state.user.user_id,
-    ...state.peers.map((peer) => peer.user_id).sort(),
-    ...state.session.map((peer) => peer.user_id).sort(),
-    ...state.messages.map((message) => message.sender),
-  ];
-  const uniqueSenders = [...new Set(senders)].sort();
-  return new Map(uniqueSenders.map((sender, index) => [sender, bubblePalettes[index % bubblePalettes.length]]));
 }
 
 function setControlsEnabled(enabled) {
