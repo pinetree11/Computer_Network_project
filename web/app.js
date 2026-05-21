@@ -13,12 +13,12 @@ const quitButtonEl = document.querySelector("#quitButton");
 let lastMessageCount = 0;
 
 const bubblePalettes = [
-  { bg: "#e8f1ff", border: "#9ab9f5", name: "#2f4697" },
-  { bg: "#e5f8f4", border: "#8cd7c9", name: "#166b63" },
-  { bg: "#f1ecff", border: "#b7a4ef", name: "#5b43a6" },
-  { bg: "#e9f7ff", border: "#8ecde9", name: "#17698e" },
-  { bg: "#fff1f6", border: "#eca6bf", name: "#9a3158" },
-  { bg: "#f1f7e7", border: "#b7d98c", name: "#526f1f" },
+  { bg: "#B9F26D", border: "#74C947", name: "#245734", text: "#245734" },
+  { bg: "#BFFFEA", border: "#58D8A6", name: "#245734", text: "#245734" },
+  { bg: "#FFE16A", border: "#E8B944", name: "#5F4A12", text: "#5F4A12" },
+  { bg: "#FFFFFF", border: "#A8E36D", name: "#357A37", text: "#245734" },
+  { bg: "#7FDB71", border: "#45AC4C", name: "#FFFFFF", text: "#FFFFFF" },
+  { bg: "#DDF9B8", border: "#A8E36D", name: "#245734", text: "#245734" },
 ];
 
 async function api(path, options = {}) {
@@ -34,6 +34,7 @@ async function api(path, options = {}) {
 }
 
 function render(state) {
+  const senderPalettes = assignSenderPalettes(state);
   userTitleEl.textContent = state.user.user_id;
   endpointEl.textContent = `${state.user.ip}:${state.user.port}`;
   setControlsEnabled(state.active !== false);
@@ -74,7 +75,7 @@ function render(state) {
       const sender = document.createElement("strong");
       const meta = document.createElement("span");
       const body = document.createElement("p");
-      const palette = paletteFor(message.sender);
+      const palette = senderPalettes.get(message.sender) || bubblePalettes[0];
       sender.textContent = message.sender;
       meta.textContent = formatTime(message.received_at);
       body.textContent = message.body;
@@ -82,6 +83,7 @@ function render(state) {
       item.style.setProperty("--bubble-bg", palette.bg);
       item.style.setProperty("--bubble-border", palette.border);
       item.style.setProperty("--sender-color", palette.name);
+      item.style.setProperty("--bubble-text", palette.text);
       item.append(sender, meta, body);
       return item;
     })
@@ -151,12 +153,15 @@ function formatTime(seconds) {
   });
 }
 
-function paletteFor(sender) {
-  let hash = 0;
-  for (const character of sender) {
-    hash = (hash * 31 + character.charCodeAt(0)) % bubblePalettes.length;
-  }
-  return bubblePalettes[hash];
+function assignSenderPalettes(state) {
+  const senders = [
+    state.user.user_id,
+    ...state.peers.map((peer) => peer.user_id).sort(),
+    ...state.session.map((peer) => peer.user_id).sort(),
+    ...state.messages.map((message) => message.sender),
+  ];
+  const uniqueSenders = [...new Set(senders)].sort();
+  return new Map(uniqueSenders.map((sender, index) => [sender, bubblePalettes[index % bubblePalettes.length]]));
 }
 
 function setControlsEnabled(enabled) {
