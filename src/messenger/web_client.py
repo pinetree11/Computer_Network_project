@@ -71,6 +71,11 @@ class WebMessengerState:
             recipients = list(self.session.values())
         for peer in recipients:
             send_to_peer(peer, self.user_id, body)
+        if recipients:
+            chat_message = ChatMessage(sender=self.user_id, body=body, received_at=time.time())
+            with self.lock:
+                if self.active:
+                    self.messages.append(chat_message)
         return len(recipients)
 
     def logout(self) -> None:

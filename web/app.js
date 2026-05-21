@@ -12,6 +12,15 @@ const quitButtonEl = document.querySelector("#quitButton");
 
 let lastMessageCount = 0;
 
+const bubblePalettes = [
+  { bg: "#e8f1ff", border: "#9ab9f5", name: "#2f4697" },
+  { bg: "#e5f8f4", border: "#8cd7c9", name: "#166b63" },
+  { bg: "#f1ecff", border: "#b7a4ef", name: "#5b43a6" },
+  { bg: "#e9f7ff", border: "#8ecde9", name: "#17698e" },
+  { bg: "#fff1f6", border: "#eca6bf", name: "#9a3158" },
+  { bg: "#f1f7e7", border: "#b7d98c", name: "#526f1f" },
+];
+
 async function api(path, options = {}) {
   const response = await fetch(path, {
     headers: { "Content-Type": "application/json" },
@@ -65,10 +74,14 @@ function render(state) {
       const sender = document.createElement("strong");
       const meta = document.createElement("span");
       const body = document.createElement("p");
+      const palette = paletteFor(message.sender);
       sender.textContent = message.sender;
       meta.textContent = formatTime(message.received_at);
       body.textContent = message.body;
-      item.className = "message";
+      item.className = message.sender === state.user.user_id ? "message mine" : "message";
+      item.style.setProperty("--bubble-bg", palette.bg);
+      item.style.setProperty("--bubble-border", palette.border);
+      item.style.setProperty("--sender-color", palette.name);
       item.append(sender, meta, body);
       return item;
     })
@@ -136,6 +149,14 @@ function formatTime(seconds) {
     hour: "2-digit",
     minute: "2-digit",
   });
+}
+
+function paletteFor(sender) {
+  let hash = 0;
+  for (const character of sender) {
+    hash = (hash * 31 + character.charCodeAt(0)) % bubblePalettes.length;
+  }
+  return bubblePalettes[hash];
 }
 
 function setControlsEnabled(enabled) {
