@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Messenger</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <main class="app">
+      <section class="sidebar">
+        <div class="brand">
+          <div class="berry-mark" aria-hidden="true">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+          <div>
+            <p class="label">Blueberry Messenger</p>
+            <h1 id="userTitle">Messenger</h1>
+            <p id="endpoint" class="muted"></p>
+          </div>
+        </div>
+
+        <div class="session-note">
+          <p class="label">Signed in</p>
+          <p>Direct peer messages with a crisp little web cockpit.</p>
+        </div>
+
+        <div class="toolbar">
+          <button id="refreshButton" type="button">Refresh</button>
+          <button id="endButton" type="button">End Session</button>
+          <button id="quitButton" type="button">Quit</button>
+        </div>
+
+        <div>
+          <h2>Online Users</h2>
+          <ul id="peers" class="list"></ul>
+        </div>
+
+        <div>
+          <h2>Session</h2>
+          <ul id="session" class="list"></ul>
+        </div>
+      </section>
+
+      <section class="chat">
+        <header class="chat-header">
+          <div>
+            <p class="label">Conversation</p>
+            <h2>Messenger Session</h2>
+          </div>
+          <div class="freshness" aria-hidden="true">Live</div>
+        </header>
+        <div id="messages" class="messages"></div>
+        <form id="sendForm" class="composer">
+          <input id="messageInput" type="text" autocomplete="off" placeholder="메시지를 입력하세요">
+          <button type="submit">Send</button>
+        </form>
+        <p id="status" class="status"></p>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>

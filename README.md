@@ -22,8 +22,10 @@
 │       ├── client.py      # 사용자 프로그램, P2P 송수신
 │       ├── login_server.py# 로그인 서버
 │       ├── protocol.py    # 헤더/바디 메시지 포맷
-│       └── storage.py     # 온라인 사용자 목록 파일 저장
+│       ├── storage.py     # 온라인 사용자 목록 파일 저장
+│       └── web_client.py  # 브라우저 UI용 로컬 클라이언트 서버
 ├── tests/                 # 단위 테스트
+├── web/                   # 웹 UI 정적 파일
 └── network_design.pdf     # 과제 설명 원본
 ```
 
@@ -41,6 +43,15 @@ PYTHONPATH=src python3 -m messenger.login_server --host 127.0.0.1 --port 9000
 PYTHONPATH=src python3 -m messenger.client --id alice --server-host 127.0.0.1 --server-port 9000 --listen-port 10001
 PYTHONPATH=src python3 -m messenger.client --id bob --server-host 127.0.0.1 --server-port 9000 --listen-port 10002
 ```
+
+웹 UI 클라이언트:
+
+```bash
+PYTHONPATH=src python3 -m messenger.web_client --id alice --server-host 127.0.0.1 --server-port 9000 --listen-port 10001 --web-port 8001
+PYTHONPATH=src python3 -m messenger.web_client --id bob --server-host 127.0.0.1 --server-port 9000 --listen-port 10002 --web-port 8002
+```
+
+브라우저에서 Alice는 `http://127.0.0.1:8001`, Bob은 `http://127.0.0.1:8002`로 접속한다.
 
 ## 기본 명령
 
