@@ -35,7 +35,7 @@ function render(state) {
       const text = document.createElement("span");
       const button = document.createElement("button");
       text.textContent = `${peer.user_id} (${peer.ip}:${peer.port})`;
-      button.textContent = "Invite";
+      button.textContent = "초대";
       button.type = "button";
       button.addEventListener("click", () => invite(peer.user_id));
       item.append(text, button);
@@ -124,7 +124,6 @@ async function sendMessage(body) {
     body: JSON.stringify({ body }),
   });
   render(state);
-  setStatus(`${state.sent_count}명에게 전송했습니다.`);
 }
 
 function setStatus(text) {

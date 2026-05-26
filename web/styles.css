@@ -19,7 +19,8 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   color: var(--ink);
   background: #f4f8df;
   font-family: Inter, "Segoe UI", Arial, sans-serif;
@@ -54,13 +55,16 @@ input:disabled {
 .app {
   display: grid;
   grid-template-columns: minmax(300px, 380px) 1fr;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
 }
 
 .sidebar {
   display: flex;
   flex-direction: column;
   gap: 22px;
+  min-height: 0;
+  overflow: auto;
   border-right: 1px solid var(--line);
   padding: 28px;
   background: #fffdf2;
@@ -208,6 +212,8 @@ h2 {
   display: grid;
   grid-template-rows: auto 1fr auto auto;
   min-width: 0;
+  min-height: 0;
+  overflow: hidden;
   padding: 28px;
 }
 
@@ -239,7 +245,7 @@ h2 {
   flex-direction: column;
   gap: 12px;
   overflow: auto;
-  min-height: 360px;
+  min-height: 0;
   border: 1px solid var(--line);
   border-radius: 8px;
   padding: 18px;
@@ -317,9 +323,11 @@ h2 {
 @media (max-width: 760px) {
   .app {
     grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
   }
 
   .sidebar {
+    max-height: 42vh;
     border-right: 0;
     border-bottom: 1px solid var(--line);
   }
