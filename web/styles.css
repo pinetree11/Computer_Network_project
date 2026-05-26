@@ -1,13 +1,10 @@
 :root {
   --ink: #245734;
   --muted: #5f7d5e;
-  --paper: #ffffff;
-  --cream: #fffdf2;
   --apple: #b9f26d;
   --apple-deep: #6bcb3d;
   --leaf: #245734;
   --mint: #bfffea;
-  --lime-soft: #ddf9b8;
   --line: #a8e36d;
   --paper-shadow: 0 18px 40px rgba(36, 87, 52, 0.16);
   --soft-shadow: 0 12px 26px rgba(36, 87, 52, 0.12);

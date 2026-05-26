@@ -65,7 +65,7 @@ class WebMessengerState:
         with self.lock:
             self.session.clear()
 
-    def send(self, body: str) -> int:
+    def send(self, body: str) -> None:
         self._ensure_active()
         with self.lock:
             recipients = list(self.session.values())
@@ -76,7 +76,6 @@ class WebMessengerState:
             with self.lock:
                 if self.active:
                     self.messages.append(chat_message)
-        return len(recipients)
 
     def logout(self) -> None:
         with self.lock:
@@ -159,14 +158,11 @@ class WebClientHandler(SimpleHTTPRequestHandler):
                 self._send_json(self.state.snapshot())
             elif self.path == "/api/send":
                 payload = self._read_json()
-                sent_count = self.state.send(str(payload["body"]))
-                self._send_json({"sent_count": sent_count, **self.state.snapshot()})
+                self.state.send(str(payload["body"]))
+                self._send_json(self.state.snapshot())
             elif self.path == "/api/end":
                 self.state.end_session()
                 self._send_json(self.state.snapshot())
-            elif self.path == "/api/logout":
-                self.state.logout()
-                self._send_json({"ok": True})
             elif self.path == "/api/quit":
                 self.state.logout()
                 self._send_json({"ok": True})
